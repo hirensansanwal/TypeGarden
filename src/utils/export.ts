@@ -10,7 +10,8 @@ export function buildStandaloneSVG(
   theme: Theme,
   text: string,
   width: number = 1920,
-  height: number = 1080
+  height: number = 1080,
+  haloMode: boolean = false
 ): string {
   const centerX = width / 2;
   const centerY = height / 2;
@@ -120,6 +121,7 @@ export function buildStandaloneSVG(
       text-anchor: middle;
       dominant-baseline: central;
       font-weight: 400;
+      ${haloMode ? `stroke: ${theme.background}; stroke-width: 5px; paint-order: stroke fill; stroke-linejoin: round;` : ''}
     }
   </style>
   <rect class="bg" width="100%" height="100%" />
@@ -142,8 +144,8 @@ export function buildStandaloneSVG(
 /**
  * Downloads a clean standalone SVG file.
  */
-export function downloadSVG(nodes: ArtNode[], theme: Theme, text: string) {
-  const svgString = buildStandaloneSVG(nodes, theme, text, 1920, 1080);
+export function downloadSVG(nodes: ArtNode[], theme: Theme, text: string, haloMode: boolean = false) {
+  const svgString = buildStandaloneSVG(nodes, theme, text, 1920, 1080, haloMode);
   const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -158,10 +160,10 @@ export function downloadSVG(nodes: ArtNode[], theme: Theme, text: string) {
 /**
  * Renders the SVG onto a high-DPI canvas and triggers a PNG download.
  */
-export function downloadPNG(nodes: ArtNode[], theme: Theme, text: string) {
+export function downloadPNG(nodes: ArtNode[], theme: Theme, text: string, haloMode: boolean = false) {
   const width = 2560;
   const height = 1440;
-  const svgString = buildStandaloneSVG(nodes, theme, text, width, height);
+  const svgString = buildStandaloneSVG(nodes, theme, text, width, height, haloMode);
   const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   

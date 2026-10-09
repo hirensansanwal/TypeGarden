@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import type { Theme } from '../../utils/themes';
+import { getPermalinkUrl } from '../../utils/permalink';
 
 interface UIOverlayProps {
   themes: Theme[];
@@ -9,6 +10,14 @@ interface UIOverlayProps {
   onTogglePosterMode: () => void;
   onExportPNG: () => void;
   onExportSVG: () => void;
+  text?: string;
+  zenMode?: boolean;
+  onToggleZen?: () => void;
+  haloMode?: boolean;
+  onToggleHalo?: () => void;
+  isChromeFaded?: boolean;
+  onFocusChange?: (isFocused: boolean) => void;
+  onPermalinkCopied?: () => void;
 }
 
 export const UIOverlay: React.FC<UIOverlayProps> = React.memo(({
@@ -19,29 +28,130 @@ export const UIOverlay: React.FC<UIOverlayProps> = React.memo(({
   onTogglePosterMode,
   onExportPNG,
   onExportSVG,
+  text = '',
+  zenMode = false,
+  onToggleZen,
+  haloMode = false,
+  onToggleHalo,
+  isChromeFaded = false,
+  onFocusChange,
+  onPermalinkCopied,
 }) => {
   const [copied, setCopied] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const handleCopyCode = (e: React.MouseEvent) => {
+  useEffect(() => {
+    return () => {
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    };
+  }, []);
+
+  const handleCopyLink = useCallback(async (e: React.MouseEvent) => {
     e.stopPropagation();
-    navigator.clipboard?.writeText('https://github.com/hirensansanwal/TypeGarden').catch(() => {});
+    let permalink = '';
+    if (typeof window !== 'undefined') {
+      permalink = getPermalinkUrl(window.location.href, text, activeThemeId);
+    }
+
+    let success = false;
+    if (navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(permalink);
+        success = true;
+      } catch {
+        // Fallback to execCommand below
+      }
+    }
+
+    if (!success && typeof document !== 'undefined') {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = permalink;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        ta.style.top = '-9999px';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        success = document.execCommand('copy');
+        document.body.removeChild(ta);
+      } catch {
+        success = false;
+      }
+    }
+
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+    setShowToast(true);
+    onPermalinkCopied?.();
+
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    toastTimerRef.current = setTimeout(() => {
+      setCopied(false);
+      setShowToast(false);
+    }, 2500);
+  }, [text, activeThemeId, onPermalinkCopied]);
 
   return (
-    <div className="ui-overlay-container">
+    <div
+      className={`ui-overlay-container ${isChromeFaded ? 'ui-faded' : ''}`}
+      onFocus={() => onFocusChange?.(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) {
+          onFocusChange?.(false);
+        }
+      }}
+    >
+      {/* R2: Toast Notification Pill */}
+      {showToast && (
+        <div
+          className="ui-toast-pill"
+          role="status"
+          aria-live="polite"
+        >
+          Garden permalink copied to clipboard!
+        </div>
+      )}
+
       {/* Top Header */}
       <div className="ui-overlay-header">
         {/* Top Left: Actions & Attribution */}
         <div className="ui-overlay-header-left">
           <div className="ui-overlay-actions">
             <button
-              onClick={handleCopyCode}
+              onClick={handleCopyLink}
               style={actionPillStyle}
-              aria-label="Copy project link"
+              aria-label="Copy garden permalink"
             >
               {copied ? 'copied!' : 'copy link'}
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); onToggleZen?.(); }}
+              style={{
+                ...actionPillStyle,
+                backgroundColor: zenMode ? 'rgba(255, 255, 255, 0.22)' : undefined,
+                borderColor: zenMode ? 'rgba(255, 255, 255, 0.4)' : undefined,
+                color: zenMode ? '#ffffff' : 'inherit',
+              }}
+              aria-pressed={zenMode}
+              aria-label="Toggle Zen distraction-free mode (F)"
+              title="Toggle Zen distraction-free mode (F)"
+            >
+              {zenMode ? 'zen on' : 'zen'}
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); onToggleHalo?.(); }}
+              style={{
+                ...actionPillStyle,
+                backgroundColor: haloMode ? 'rgba(255, 255, 255, 0.22)' : undefined,
+                borderColor: haloMode ? 'rgba(255, 255, 255, 0.4)' : undefined,
+                color: haloMode ? '#ffffff' : 'inherit',
+              }}
+              aria-pressed={haloMode}
+              aria-label="Toggle high-contrast text halo (H)"
+              title="Toggle high-contrast text halo (H)"
+            >
+              {haloMode ? 'halo on' : 'halo'}
             </button>
             <a
               href="https://buymeacoffee.com"
@@ -49,6 +159,7 @@ export const UIOverlay: React.FC<UIOverlayProps> = React.memo(({
               rel="noopener noreferrer"
               className="ui-overlay-buy-coffee"
               style={{ ...actionPillStyle, textDecoration: 'none' }}
+              aria-label="Buy me a coffee (opens in new tab)"
             >
               buy me a coffee
             </a>
@@ -79,6 +190,7 @@ export const UIOverlay: React.FC<UIOverlayProps> = React.memo(({
                 color: !posterMode ? '#fff' : 'inherit',
                 opacity: !posterMode ? 1 : 0.6,
               }}
+              aria-label="Switch to Type mode"
             >
               Type
             </button>
@@ -90,6 +202,7 @@ export const UIOverlay: React.FC<UIOverlayProps> = React.memo(({
                 color: posterMode ? '#fff' : 'inherit',
                 opacity: posterMode ? 1 : 0.6,
               }}
+              aria-label="Switch to Poster mode"
             >
               Poster
             </button>

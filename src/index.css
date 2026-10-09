@@ -156,6 +156,13 @@ html, body, #root {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--color-text);
+  transition: opacity 0.2s ease-out;
+}
+
+.ui-overlay-container.ui-faded {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.8s ease-in-out !important;
 }
 
 .ui-overlay-header {
@@ -310,6 +317,61 @@ html, body, #root {
   }
 }
 
+/* R4: WCAG AAA Compliant Focus Rings (dual ring: outline 2px solid #ffffff, outline-offset 2px, box-shadow 0 0 0 4px rgba(0,0,0,0.75)) */
+:focus-visible {
+  outline: 2px solid #ffffff !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.75) !important;
+}
 
+.ui-swatch-btn:focus-visible {
+  outline: 2px solid #ffffff !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.75) !important;
+}
 
+/* R3: Toggleable High-Contrast Text Halo (2.5px text contour matching theme background) */
+.text-halo-active .char-span {
+  -webkit-text-stroke: 2.5px var(--color-bg);
+  paint-order: stroke fill;
+  text-shadow:
+    0 0 2.5px var(--color-bg),
+    -1.75px -1.75px 0 var(--color-bg),
+     1.75px -1.75px 0 var(--color-bg),
+    -1.75px  1.75px 0 var(--color-bg),
+     1.75px  1.75px 0 var(--color-bg),
+    -2.5px 0 0 var(--color-bg),
+     2.5px 0 0 var(--color-bg),
+     0 -2.5px 0 var(--color-bg),
+     0  2.5px 0 var(--color-bg);
+}
 
+/* R2: Floating Toast Notification Pill */
+.ui-toast-pill {
+  position: fixed;
+  top: 1.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10, 10, 10, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  color: #ffffff;
+  padding: 0.5rem 1.25rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  text-transform: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  z-index: 100;
+  pointer-events: none;
+  animation: toastFade 2.5s ease-in-out forwards;
+}
+
+@keyframes toastFade {
+  0% { opacity: 0; transform: translate(-50%, -10px); }
+  10% { opacity: 1; transform: translate(-50%, 0); }
+  85% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, -6px); }
+}

@@ -4,6 +4,7 @@ import type { CharacterMeasurement } from '../../types';
 interface TextLayerProps {
   text: string;
   onMeasure: (measurements: CharacterMeasurement[]) => void;
+  haloMode?: boolean;
 }
 
 /**
@@ -25,7 +26,7 @@ const getAdaptiveFontSize = (len: number) => {
   return 'clamp(1.4rem, 2.8vw, 3.6rem)';
 };
 
-export const TextLayer: React.FC<TextLayerProps> = React.memo(({ text, onMeasure }) => {
+export const TextLayer: React.FC<TextLayerProps> = React.memo(({ text, onMeasure, haloMode = false }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const [viewportKey, setViewportKey] = useState(0);
@@ -115,6 +116,7 @@ export const TextLayer: React.FC<TextLayerProps> = React.memo(({ text, onMeasure
     >
       <h1
         ref={headingRef}
+        className={haloMode ? 'text-halo-active' : undefined}
         style={{
           fontFamily: "'Playfair Display', serif",
           fontSize: getAdaptiveFontSize(n), 
