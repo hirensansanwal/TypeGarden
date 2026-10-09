@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#18201a"/>
+      <stop offset="100%" stop-color="#0e1310"/>
+    </linearGradient>
+    <linearGradient id="stemGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3e6b4a"/>
+      <stop offset="50%" stop-color="#5a9169"/>
+      <stop offset="100%" stop-color="#72aa82"/>
+    </linearGradient>
+    <radialGradient id="flowerCenter" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fced82"/>
+      <stop offset="100%" stop-color="#e8be3d"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Circular Medallion Background -->
+  <circle cx="32" cy="32" r="30" fill="url(#bgGrad)" stroke="#2b3b2f" stroke-width="1.5"/>
+  <circle cx="32" cy="32" r="27.5" fill="none" stroke="#36493a" stroke-width="0.75" stroke-dasharray="2 2" opacity="0.4"/>
+
+  <!-- Back Vine Layer (behind letterform) -->
+  <path d="M 25 45 C 29 44, 34 41, 35 37" fill="none" stroke="url(#stemGrad)" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Serif Letterform "T" -->
+  <g fill="#f2f5f2">
+    <!-- Main serif T path -->
+    <path d="M 16 19 C 16 17.8 17.2 17 18.5 17 L 45.5 17 C 46.8 17 48 17.8 48 19 L 48 21.2 C 48 21.8 47.4 22.2 46.8 22.2 C 45.8 22.2 45.2 21.6 44.5 20.6 L 41.2 20.6 C 39.2 20.6 38.2 21.4 38.2 23.4 L 38.2 43.6 C 38.2 45.4 39.2 46.2 41.2 46.2 L 43.2 46.2 C 43.8 46.2 44.2 46.6 44.2 47.2 L 44.2 48 L 19.8 48 L 19.8 47.2 C 19.8 46.6 20.2 46.2 20.8 46.2 L 22.8 46.2 C 24.8 46.2 25.8 45.4 25.8 43.6 L 25.8 23.4 C 25.8 21.4 24.8 20.6 22.8 20.6 L 19.5 20.6 C 18.8 21.6 18.2 22.2 17.2 22.2 C 16.6 22.2 16 21.8 16 21.2 Z"/>
+  </g>
+
+  <!-- Front Vine Layer (weaving in front of the letterform) -->
+  <g fill="none" stroke="url(#stemGrad)" stroke-linecap="round">
+    <!-- Vine stem weaving over T -->
+    <path d="M 23 48 C 24 47, 24.5 46, 25 45 M 35 37 C 36 33, 31 29, 28 26 C 25 23, 27 18, 32 17 C 36 16, 40 18, 43 19" stroke-width="2"/>
+    <!-- Curling tendril at top right -->
+    <path d="M 43 19 C 46 20, 48 18, 47 16 C 46 14, 43.5 15, 44 17" stroke-width="1.3"/>
+    <!-- Delicate lower tendril spiral -->
+    <path d="M 23 48 C 20 50, 18 47, 20 45 C 21 44, 22.5 45.5, 21.8 46.5" stroke-width="1.1"/>
+  </g>
+
+  <!-- Foliage / Leaves -->
+  <!-- Leaf 1: Lower right blade -->
+  <path d="M 36 34 C 41 33, 44 36.5, 43 40 C 40 39.5, 37 37.5, 36 34 Z" fill="#5a9169"/>
+  <!-- Leaf 2: Mid left blade -->
+  <path d="M 28 26 C 23 25, 20.5 28.5, 22 32 C 24.5 31.5, 27.5 29, 28 26 Z" fill="#72aa82"/>
+  <!-- Leaf 3: Small sprout near crossbar -->
+  <path d="M 33 17 C 33 13, 30 11, 28 13 C 28.5 15.5, 30.5 17, 33 17 Z" fill="#5a9169"/>
+
+  <!-- Botanical Flower Blossom (Top Right of crossbar) -->
+  <g transform="translate(43, 19)">
+    <!-- 5 Petals -->
+    <ellipse cx="0" cy="-4.2" rx="2.4" ry="3.2" fill="#e05a47" transform="rotate(0)"/>
+    <ellipse cx="0" cy="-4.2" rx="2.4" ry="3.2" fill="#e05a47" transform="rotate(72)"/>
+    <ellipse cx="0" cy="-4.2" rx="2.4" ry="3.2" fill="#e05a47" transform="rotate(144)"/>
+    <ellipse cx="0" cy="-4.2" rx="2.4" ry="3.2" fill="#e05a47" transform="rotate(216)"/>
+    <ellipse cx="0" cy="-4.2" rx="2.4" ry="3.2" fill="#e05a47" transform="rotate(288)"/>
+    <!-- Inner petal highlight -->
+    <circle cx="0" cy="0" r="2.8" fill="#ec7260"/>
+    <!-- Stamen / Floral Center -->
+    <circle cx="0" cy="0" r="1.6" fill="url(#flowerCenter)"/>
+    <circle cx="0" cy="0" r="0.7" fill="#8f6912"/>
+  </g>
+
+  <!-- Wild Berry Accents -->
+  <circle cx="21" cy="43" r="1.4" fill="#d44b58"/>
+  <circle cx="23" cy="42" r="1.1" fill="#e56774"/>
+</svg>

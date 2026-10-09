@@ -24,7 +24,7 @@ export const UIOverlay: React.FC<UIOverlayProps> = React.memo(({
 
   const handleCopyCode = (e: React.MouseEvent) => {
     e.stopPropagation();
-    navigator.clipboard?.writeText('https://github.com/type-garden').catch(() => {});
+    navigator.clipboard?.writeText('https://github.com/hirensansanwal/TypeGarden').catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
