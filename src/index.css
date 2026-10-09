@@ -1,0 +1,315 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+  --color-bg: #000000;
+  --color-stem: #4a5c92; /* muted blue/purple botanical */
+  --color-leaf: #397a62; /* muted green/blue */
+  --color-flower: #d6643c; /* earthy orange/red */
+  --color-flower-center: #f0a35e;
+  --color-text: rgba(255, 255, 255, 0.15); /* More translucent for elegance */
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 0.6; }
+}
+
+.custom-cursor {
+  display: inline-block;
+  font-weight: 200;
+  color: var(--color-text);
+  margin-left: 0.05em;
+  transition: opacity 0.5s ease;
+}
+
+.custom-cursor.cursor-active {
+  opacity: 0.8;
+  animation: cursorBlink 1.2s step-end infinite;
+}
+
+.custom-cursor.cursor-idle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-bg);
+  overflow: hidden; /* No unnecessary scrolling */
+  color: white;
+}
+
+/* Visually hide but keep accessible */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Animations */
+@keyframes drawPath {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes growIn {
+  from { opacity: 0; transform: scale(0); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes witherOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.anim-stem {
+  animation: drawPath 0.3s ease-out both;
+}
+
+.anim-fade {
+  animation: fade-in 0.3s ease-out both;
+}
+
+.anim-leaf {
+  animation: growLeaf 0.4s ease-out both;
+}
+
+@keyframes growLeaf {
+  0% { opacity: 0; transform: scale(0.5) rotate(-5deg); filter: brightness(1.2); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); filter: brightness(1); }
+}
+
+.anim-flower {
+  animation: bloomFlower 0.6s ease-out both;
+}
+
+@keyframes bloomFlower {
+  0% { opacity: 0; transform: scale(0.4) rotate(-5deg); filter: brightness(1.3); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); filter: brightness(1); }
+}
+
+.anim-berry {
+  animation: popBerry 0.45s ease-out both;
+}
+
+@keyframes popBerry {
+  0% { opacity: 0; transform: scale(0.3) rotate(-8deg); filter: brightness(1.25); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); filter: brightness(1); }
+}
+
+.anim-wither {
+  animation: witherOut 0.3s ease-in forwards !important;
+}
+
+/* Ambient botanical interaction: subtle sway on hover */
+.plant-breeze {
+  pointer-events: auto;
+  transform-origin: 0 0;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.plant-breeze:hover {
+  transform: translate(0, -3px) rotate(2deg) scale(1.03);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-stem {
+    animation: none;
+    stroke-dashoffset: 0 !important;
+  }
+  .anim-leaf, .anim-flower, .anim-fade, .anim-berry {
+    animation: none;
+    opacity: 1;
+    transform: none !important;
+  }
+}
+
+/* UI Overlay Layout & Responsiveness */
+.ui-overlay-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.75rem 2.25rem;
+  box-sizing: border-box;
+  z-index: 10;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text);
+}
+
+.ui-overlay-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  gap: 1rem;
+}
+
+.ui-overlay-header-left {
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.ui-overlay-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.ui-overlay-subtitle {
+  opacity: 0.5;
+  font-size: 0.7rem;
+  margin-top: 0.2rem;
+}
+
+.ui-overlay-header-right {
+  pointer-events: auto;
+  flex-shrink: 0;
+}
+
+.ui-overlay-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+  gap: 1.5rem;
+}
+
+.ui-overlay-help {
+  pointer-events: auto;
+  align-self: flex-end;
+  opacity: 0.45;
+  display: flex;
+  gap: 1.25rem;
+  font-size: 0.7rem;
+}
+
+.ui-overlay-footer-right {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.ui-swatches-group {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.ui-export-group {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+/* Touch targets for swatches: min 36x36px tap target with 15x15px visual dot */
+.ui-swatch-btn {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ui-swatch-dot {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  pointer-events: none;
+  display: block;
+  box-sizing: border-box;
+}
+
+/* Mobile responsive adjustments for screens < 640px */
+@media (max-width: 639px) {
+  .ui-overlay-container {
+    padding: 1rem 0.75rem;
+  }
+
+  .ui-overlay-header {
+    align-items: center;
+  }
+
+  .ui-overlay-buy-coffee {
+    display: none !important;
+  }
+
+  .ui-overlay-subtitle {
+    display: none !important;
+  }
+
+  .ui-overlay-footer {
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .ui-overlay-help {
+    align-self: center;
+    font-size: 0.62rem;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .ui-overlay-footer-right {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    width: 100%;
+  }
+
+  .ui-swatches-group {
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+    max-width: 100%;
+  }
+
+  .ui-export-group {
+    justify-content: center;
+    gap: 0.75rem;
+  }
+}
+
+
+
+
