@@ -256,4 +256,19 @@ const sampleLoadAnnouncement = `Loaded shared garden: 'flower' in ${themes[3].na
 assert.ok(sampleLoadAnnouncement.includes('flower') && sampleLoadAnnouncement.includes('Blooming 6 letters'));
 console.log('✓ Test 35: ARIA live status announcements format informative semantic state.');
 
+// Test 36: Standalone SVG export contains explicit viewBox and cross-platform serif fallbacks
+const testExportSvg = buildStandaloneSVG(gardenSeedA, themes[0], 'flora', 1920, 1080);
+assert.ok(testExportSvg.includes('viewBox="0 0 1920 1080"'), 'SVG must declare explicit viewBox');
+assert.ok(testExportSvg.includes('Playfair Display'), 'SVG must specify primary font');
+assert.ok(testExportSvg.includes('Georgia') && testExportSvg.includes('serif'), 'SVG must specify portable serif fallbacks');
+console.log('✓ Test 36: Standalone SVG export includes explicit viewBox and portable font fallbacks.');
+
+// Test 37: Polished Midnight and Sakura theme stem contrasts exceed 4.0:1
+const midnightStemContrast = contrastRatio(themes[0].stem, themes[0].background);
+assert.ok(midnightStemContrast >= 4.0, `Midnight stem contrast must exceed 4.0:1, got ${midnightStemContrast.toFixed(2)}`);
+const sakuraTheme = themes.find(t => t.id === 'sakura')!;
+const sakuraStemContrast = contrastRatio(sakuraTheme.stem, sakuraTheme.background);
+assert.ok(sakuraStemContrast >= 4.0, `Sakura stem contrast must exceed 4.0:1, got ${sakuraStemContrast.toFixed(2)}`);
+console.log(`✓ Test 37: Polished Midnight (${midnightStemContrast.toFixed(2)}:1) and Sakura (${sakuraStemContrast.toFixed(2)}:1) stem contrasts exceed 4.0:1.`);
+
 console.log('All tests passed!');

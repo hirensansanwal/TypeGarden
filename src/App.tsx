@@ -44,6 +44,8 @@ function App() {
 
   const prevTextRef = useRef(text);
   const fadeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isUiFocusedRef = useRef(isUiFocused);
+  isUiFocusedRef.current = isUiFocused;
 
   // Roll a fresh random master seed and announce when text is cleared to empty
   useEffect(() => {
@@ -196,37 +198,35 @@ function App() {
     if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
 
     fadeTimerRef.current = setTimeout(() => {
-      if (!isUiFocused) {
+      if (!isUiFocusedRef.current) {
         setIsChromeFaded(true);
       }
     }, ZEN_FADE_TIMEOUT_MS);
-  }, [isUiFocused]);
+  }, []);
 
-  // Activity listeners: mouse movement, touch, keys, pointers
+  // Activity listeners: pointer movement, touch, keys
   useEffect(() => {
     const handleActivity = () => {
       resetInactivityTimer();
     };
 
-    window.addEventListener('mousemove', handleActivity, { passive: true });
     window.addEventListener('pointermove', handleActivity, { passive: true });
     window.addEventListener('touchstart', handleActivity, { passive: true });
     window.addEventListener('keydown', handleActivity, { passive: true });
 
     fadeTimerRef.current = setTimeout(() => {
-      if (!isUiFocused) {
+      if (!isUiFocusedRef.current) {
         setIsChromeFaded(true);
       }
     }, ZEN_FADE_TIMEOUT_MS);
 
     return () => {
       if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
-      window.removeEventListener('mousemove', handleActivity);
       window.removeEventListener('pointermove', handleActivity);
       window.removeEventListener('touchstart', handleActivity);
       window.removeEventListener('keydown', handleActivity);
     };
-  }, [resetInactivityTimer, isUiFocused]);
+  }, [resetInactivityTimer]);
 
   // Global keyboard shortcuts: 'F' for Zen, 'H' for Halo (guarded against typing in textarea)
   useEffect(() => {
@@ -252,7 +252,7 @@ function App() {
     return () => window.removeEventListener('keydown', handleGlobalShortcuts);
   }, [handleToggleZen, handleToggleHalo]);
 
-  // R2: Real-time URL hash synchronization via replaceState (50ms micro-debounce)
+  // R2: Real-time URL hash synchronization via replaceState (350ms debounce)
   useEffect(() => {
     const timer = setTimeout(() => {
       if (typeof window !== 'undefined') {
@@ -261,7 +261,7 @@ function App() {
           window.history.replaceState(null, '', newHash);
         }
       }
-    }, 50);
+    }, 350);
     return () => clearTimeout(timer);
   }, [text, activeThemeId]);
 

@@ -115,7 +115,7 @@ export function buildStandaloneSVG(
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700&amp;display=swap');
     .bg { fill: ${theme.background}; }
     .trellis-text {
-      font-family: 'Playfair Display', serif;
+      font-family: 'Playfair Display', 'Didot', 'Bodoni MT', 'Cinzel', Georgia, 'Times New Roman', serif;
       font-size: ${fontSize}px;
       fill: ${theme.text};
       text-anchor: middle;

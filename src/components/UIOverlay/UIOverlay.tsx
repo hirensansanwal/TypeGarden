@@ -81,15 +81,22 @@ export const UIOverlay: React.FC<UIOverlayProps> = React.memo(({
       }
     }
 
-    setCopied(true);
-    setShowToast(true);
-    onPermalinkCopied?.();
+    if (success) {
+      setCopied(true);
+      setShowToast(true);
+      onPermalinkCopied?.();
 
-    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
-    toastTimerRef.current = setTimeout(() => {
-      setCopied(false);
-      setShowToast(false);
-    }, 2500);
+      if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+      toastTimerRef.current = setTimeout(() => {
+        setCopied(false);
+        setShowToast(false);
+      }, 2500);
+    } else {
+      // Fallback when clipboard permissions are blocked in restricted environments
+      if (typeof window !== 'undefined') {
+        window.prompt('Copy this garden link:', permalink);
+      }
+    }
   }, [text, activeThemeId, onPermalinkCopied]);
 
   return (
